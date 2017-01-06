@@ -15,6 +15,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:name=".DatabaseContentProvider"
+            android:authorities="io.pello.android.androidsyncadapter.sqlprovider.Todo"
+            android:enabled="true"
+            android:exported="true">
+            <uses-permission android:name="io.pello.android.androidsyncadapter.provider.Students.READ" />
+            <!-- TODO: We could apply permissions -->
+
+            android:readPermission="io.pello.android.androidsyncadapter.provider.READ"
+            android:writePermission="io.pello.android.androidsyncadapter.provider.WRITE"
+            android:permission="io.pello.android.androidsyncadapter.provider.READ_WRITE"
+
+        </provider>
     </application>
 
 </manifest>
