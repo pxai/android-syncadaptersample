@@ -1,20 +1,26 @@
 package io.pello.android.androidsyncadapter;
 
+import android.accounts.Account;
 import android.app.LoaderManager;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.content.SyncRequest;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 public class MainActivity extends AppCompatActivity  implements
         LoaderManager.LoaderCallbacks<Cursor> {
-
-    private String contentUri = "content://io.pello.android.androidloaderssample.sqlprovider.Todo/tareas";
+    private EditText editTextNew;
+    private String contentUri = "content://io.pello.android.androidsyncadapter.sqlprovider.Todo";
     // This is the Adapter being used to display the list's data.
     SimpleCursorAdapter mAdapter;
 
@@ -22,6 +28,7 @@ public class MainActivity extends AppCompatActivity  implements
     String mCurFilter;
 
     private ListView listView;
+    private ContentResolver contentResolver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +36,12 @@ public class MainActivity extends AppCompatActivity  implements
         setContentView(R.layout.activity_main);
 
         listView = (ListView) findViewById(R.id.listView);
+        editTextNew = (EditText) findViewById(R.id.editTextNew);
 
         // Create an empty adapter we will use to display the loaded data.
         mAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_list_item_2, null,
-                new String[] { "_id", "tarea" },
+                new String[] { "_id", "task" },
                 new int[] { android.R.id.text1, android.R.id.text2 }, 0);
 
         listView.setAdapter(mAdapter);
@@ -41,6 +49,20 @@ public class MainActivity extends AppCompatActivity  implements
         // Prepare the loader.  Either re-connect with an existing one,
         // or start a new one.
         getLoaderManager().initLoader(0, null, this);
+
+        // Sync Adapter
+        final Account account = new Account(DummyAuthenticator.ACCOUNT_NAME, DummyAuthenticator.ACCOUNT_TYPE);
+        String authority = "io.pello.android.androidsyncadapter.sqlprovider.Todo";
+
+        // Simple option, will ahndle everything smartly
+        contentResolver = getContentResolver();
+        Bundle bundle = new Bundle();
+        contentResolver.requestSync(account, authority, bundle);
+
+
+        // With intervals
+        long interval = 24*60*60; // 12 hours
+        contentResolver.addPeriodicSync(account, authority, bundle, 5);
     }
 
 
@@ -51,12 +73,11 @@ public class MainActivity extends AppCompatActivity  implements
         // currently filtering.
         Uri baseUri;
 
-        baseUri = Uri.parse(this.contentUri);
-
+        baseUri = Uri.parse(this.contentUri+"/tasks");
 
         Log.d("PELLODEBUG", "Creating loader");
         return new CursorLoader(this, baseUri,  // The content URI of the words table
-                new String[]{"_id","tarea"},               // The columns to return for each row
+                new String[]{"_id","task"},               // The columns to return for each row
                 "",                        // Selection criteria parameters
                 new String[]{""},                     // Selection criteria values
                 "");                            // The sort order for the returned rows
@@ -85,5 +106,27 @@ public class MainActivity extends AppCompatActivity  implements
         // above is about to be closed.  We need to make sure we are no
         // longer using it.
         mAdapter.swapCursor(null);
+    }
+
+    /**
+     * add a new Task
+     * @param view
+     */
+    public void addTask (View view) {
+        Log.d("PELLODEBUG","New task > button pressed.");
+        Uri uri = Uri.parse(contentUri);
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("task",editTextNew.getText().toString());
+
+        // We finally make the request to the content provider
+        Uri resultUri = getContentResolver().insert(
+                uri,   // The content URI
+                contentValues
+        );
+        Log.d("PELLODEBUG","Result Uri after insert: " + uri.toString());
+        mAdapter.notifyDataSetChanged();
+        getLoaderManager().getLoader(0).forceLoad();
+
     }
 }

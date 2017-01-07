@@ -41,8 +41,7 @@ public class DatabaseContentProvider extends ContentProvider {
         Log.d("PELLODEBUG","CP> onCreate, init data.");
         dbAdapter = new DbAdapter(getContext());
         dbAdapter.open();
-        dbAdapter.insertarTarea("STUDY");
-        dbAdapter.insertarTarea("LEARN");
+
         initUris();
         return true;
     }
@@ -53,11 +52,11 @@ public class DatabaseContentProvider extends ContentProvider {
     private void initUris() {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        // This will match: content://io.pello.android.androidloaderssample.provider.Students/students/1
-        uriMatcher.addURI("io.pello.android.androidloaderssample.sqlprovider.Todo", "tareas/", 1);
+        // This will match: content://io.pello.android.androidsyncadapter.sqlprovider.Todo/tasks
+        uriMatcher.addURI("io.pello.android.androidsyncadapter.sqlprovider.Todo", "tasks/", 1);
 
-        // This will match: content://io.pello.android.androidloaderssample.provider.Students/students/2
-        uriMatcher.addURI("io.pello.android.androidloaderssample.provider.Students", "students/*/", 2);
+        // This will match: content://io.pello.android.androidsyncadapter.sqlprovider.Todo/task/2
+        uriMatcher.addURI("io.pello.android.androidsyncadapter.sqlprovider.Todo", "task/*/", 2);
     }
 
 
@@ -107,12 +106,9 @@ public class DatabaseContentProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         Log.d("PELLODEBUG","CP> insert " + uri);
 
-        mCursor.addRow(new Object[]{
-                values.getAsLong("_id"),
-                values.getAsString("name"),
-                values.getAsString("description")
-        });
-        Uri resultUri = Uri.parse("content://io.pello.android.androidloaderssample.provider.Students/students");
+        dbAdapter.insertarTarea(values.getAsString("task"));
+
+        Uri resultUri = Uri.parse("content://io.pello.android.androidsyncadapter.sqlprovider.Todo/1");
         return resultUri;
 
     }

@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.pello.android.androidsyncadapter">
+    <!-- TODO
+    Add Widget provider
+    11:00
+    -->
+    <appwidget-provider
+        android:widgetCategory="keyguard|home_screen"
+        >
+
+    </appwidget-provider>
+    <!-- For the SyncAdapter -->
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
 
     <application
         android:allowBackup="true"
@@ -20,14 +31,39 @@
             android:authorities="io.pello.android.androidsyncadapter.sqlprovider.Todo"
             android:enabled="true"
             android:exported="true">
-            <uses-permission android:name="io.pello.android.androidsyncadapter.provider.Students.READ" />
-            <!-- TODO: We could apply permissions -->
+            <uses-permission android:name="io.pello.android.androidsyncadapter.sqlprovider.Todo.READ" />
+            <!-- TODO: We could apply permissions
 
             android:readPermission="io.pello.android.androidsyncadapter.provider.READ"
             android:writePermission="io.pello.android.androidsyncadapter.provider.WRITE"
             android:permission="io.pello.android.androidsyncadapter.provider.READ_WRITE"
-
+            -->
         </provider>
+
+        <service
+            android:name="io.pello.android.androidsyncadapter.DummyAuthenticationService"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/accountauth" />
+        </service>
+
+        <service
+            android:name="io.pello.android.androidsyncadapter.TodoSyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+        </service>
+
+
+
     </application>
 
 </manifest>

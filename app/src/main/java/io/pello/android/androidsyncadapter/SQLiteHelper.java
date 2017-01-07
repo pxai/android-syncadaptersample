@@ -19,7 +19,7 @@ import android.util.Log;
 class SQLiteHelper extends SQLiteOpenHelper {
 
     // Nombre de BBDD
-    public static final String NOMBRE_BD = "todolist.db";
+    public static final String NOMBRE_BD = "tasklist.db";
 
     // Número de versión, número arbitrario
     // que decidimos nosotros
@@ -27,12 +27,12 @@ class SQLiteHelper extends SQLiteOpenHelper {
 
     // String Sql de creación de la tabla
     // se ejecutará si no existe la BD, o sea, la primera vez
-    public static final String SQLCREAR = "create table todo "+
+    public static final String SQLCREAR = "create table tasks "+
             " (_id integer primary key autoincrement, " +
-            " tarea text not null);" +
-            " insert into todo (tarea) values('EAT');" +
-            " insert into todo (tarea) values('NAP');" +
-            " insert into todo (tarea) values('FAP');";
+            " task text not null);" +
+            " insert into tasks (task) values('EAT');" +
+            " insert into tasks (task) values('NAP');" +
+            " insert into tasks (task) values('FAP');";
 
 
     /**
@@ -51,8 +51,8 @@ class SQLiteHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Se ejecuta la sentencia de creaci�n de la tabla notas.
-        db.execSQL("DROP TABLE IF EXISTS todo");
+        // Se ejecuta la sentencia de creación de la tabla notas.
+        db.execSQL("DROP TABLE IF EXISTS tasks");
         db.execSQL(SQLCREAR);
         Log.d("DEBUG","Ok, BD creada");
     }
@@ -71,7 +71,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
 
         // En este caso en el upgrade realmente
         // lo que hacemos es cargarnos lo que hay...
-        db.execSQL("DROP TABLE IF EXISTS todo");
+        db.execSQL("DROP TABLE IF EXISTS tasks");
 
         // ... y lo volvemos a generar
         onCreate(db);

@@ -20,16 +20,20 @@ import java.util.List;
 public class TodoSyncAdapter  extends AbstractThreadedSyncAdapter {
     private final AccountManager mAccountManager;
 
+
     public TodoSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         mAccountManager = AccountManager.get(context);
     }
 
+
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        Log.d("udinic", "onPerformSync for account[" + account.name + "]");
+        Log.d("PELLODEBUG", "SyncAdapter working for: " + account.name );
         try {
             // Get the auth token for the current account
+
+
           //  String authToken = mAccountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
           //  ParseComServerAccessor parseComService = new ParseComServerAccessor();
 

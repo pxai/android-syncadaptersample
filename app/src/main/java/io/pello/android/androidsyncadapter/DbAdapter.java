@@ -30,7 +30,6 @@ public class DbAdapter {
     // El contexto nos servirá para referirnos a la Activity en la que estamos
     private final Context contexto;
 
-
     /**
      * DbAdapter
      * Constructor de la clase
@@ -73,18 +72,18 @@ public class DbAdapter {
      * insertarTarea
      * Inserta un registro con los campos titulo y cuerpo en la base de datos.
      *
-     * @param tarea
+     * @param task
      * @return Devuelve el número de registro insertado 0 -1 en caso de error
      */
-    public long insertarTarea(String tarea) {
+    public long insertarTarea(String task) {
         // Creamos un registro
         ContentValues registro = new ContentValues();
 
         // Agrega los datos.
-        registro.put("tarea", tarea);
+        registro.put("task", task);
 
         // Inserta el registro y devuelve el resultado.
-        return db.insert("todo", null, registro);
+        return db.insert("tasks", null, registro);
     }
 
     /**
@@ -95,7 +94,7 @@ public class DbAdapter {
      * @return Devuelve el nº de registros afectados.
      */
     public int borrarTarea(long idRegistro) {
-        return db.delete("todo",  "_id = "
+        return db.delete("tasks",  "_id = "
                 + idRegistro, null);
     }
 
@@ -106,7 +105,7 @@ public class DbAdapter {
      * @return Cursor Devuelve un cursor con los registros obtenidos.
      */
     public Cursor obtenerTareas() {
-        return db.query("todo", new String[] {"_id","tarea"}, null, null, null, null, null);
+        return db.query("tasks", new String[] {"_id","task"}, null, null, null, null, null);
     }
 
     /**
@@ -118,7 +117,7 @@ public class DbAdapter {
      * @throws SQLException
      */
     public Cursor obtenerTarea (long idRegistro) throws SQLException {
-        Cursor registro = db.query(true, "todo",new String[] { "_id","tarea"},
+        Cursor registro = db.query(true, "tasks",new String[] { "_id","task"},
                 "_id =" + idRegistro, null, null, null, null, null);
 
         // Si lo ha encontrado, apunta al inicio del cursor.
@@ -133,15 +132,15 @@ public class DbAdapter {
      * Hace un UPDATE de los valores del registro cuyo id es idRegistro.
      *
      * @param  idRegistro id del registro que se quiere modificar.
-     * @param  tarea
+     * @param  task
      * @return int cantidad registros han sido afectados.
      */
-    public int actualizarTarea(long idRegistro, String tarea) {
+    public int actualizarTarea(long idRegistro, String task) {
         // Creamos un registro
         ContentValues registro = new ContentValues();
 
         // Agrega los datos.
-        registro.put("tarea", tarea);
+        registro.put("task", task);
 
         // Inserta el registro y devuelve el resultado.
         return db.update("to", registro,
