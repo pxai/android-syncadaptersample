@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This is the actual Sync Adapter
  * Created by PELLO_ALTADILL on 06/01/2017.
  */
 

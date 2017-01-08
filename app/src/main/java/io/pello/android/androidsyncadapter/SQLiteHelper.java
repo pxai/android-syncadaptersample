@@ -18,21 +18,14 @@ import android.util.Log;
  */
 class SQLiteHelper extends SQLiteOpenHelper {
 
-    // Nombre de BBDD
     public static final String NOMBRE_BD = "tasklist.db";
 
-    // Número de versión, número arbitrario
-    // que decidimos nosotros
     public static final int VERSION_BD = 1;
 
-    // String Sql de creación de la tabla
-    // se ejecutará si no existe la BD, o sea, la primera vez
     public static final String SQLCREAR = "create table tasks "+
             " (_id integer primary key autoincrement, " +
             " task text not null);" +
-            " insert into tasks (task) values('EAT');" +
-            " insert into tasks (task) values('NAP');" +
-            " insert into tasks (task) values('FAP');";
+            " insert into tasks (task) values('EAT');";
 
 
     /**
