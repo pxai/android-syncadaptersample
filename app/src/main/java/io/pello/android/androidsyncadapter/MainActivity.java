@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity  implements
         LoaderManager.LoaderCallbacks<Cursor> {
     private EditText editTextNew;
     private String contentUri = "content://io.pello.android.androidsyncadapter.sqlprovider.Todo";
+
     // This is the Adapter being used to display the list's data.
     SimpleCursorAdapter mAdapter;
 

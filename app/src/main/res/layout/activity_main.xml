@@ -28,6 +28,12 @@
                 android:onClick="addTask"
                 android:foreground="?android:selectableItemBackground"
                 android:src="@android:drawable/star_on"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="syncNow"
+            android:foreground="?android:selectableItemBackground"
+            android:text="Sync Now"/>
     </LinearLayout>
     <ListView
         android:layout_width="match_parent"
