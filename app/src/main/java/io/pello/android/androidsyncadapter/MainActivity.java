@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity  implements
     private ListView listView;
     private ContentResolver contentResolver;
 
+    private Account account;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity  implements
         getLoaderManager().initLoader(0, null, this);
 
         // Sync Adapter
-        final Account account = new Account(DummyAuthenticator.ACCOUNT_NAME, DummyAuthenticator.ACCOUNT_TYPE);
+        account = new Account(DummyAuthenticator.ACCOUNT_NAME, DummyAuthenticator.ACCOUNT_TYPE);
         String authority = "io.pello.android.androidsyncadapter.sqlprovider.Todo";
 
         // Simple option, will ahndle everything smartly
@@ -128,5 +130,12 @@ public class MainActivity extends AppCompatActivity  implements
         mAdapter.notifyDataSetChanged();
         getLoaderManager().getLoader(0).forceLoad();
 
+    }
+
+    public void syncNow(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true); // Performing a sync no matter if it's off
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true); // Performing a sync no matter if it's off
+        ContentResolver.requestSync(account, "io.pello.android.androidsyncadapter.sqlprovider.Todo", bundle);
     }
 }
