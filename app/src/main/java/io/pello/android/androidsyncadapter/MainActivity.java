@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity  implements
 
 
         // With intervals
-        long interval = 24*60*60; // 12 hours
-        contentResolver.addPeriodicSync(account, authority, bundle, 5);
+        //long interval = 24*60*60; // 12 hours
+        //contentResolver.addPeriodicSync(account, authority, bundle, 5);
     }
 
 
@@ -138,5 +138,6 @@ public class MainActivity extends AppCompatActivity  implements
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true); // Performing a sync no matter if it's off
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true); // Performing a sync no matter if it's off
         ContentResolver.requestSync(account, "io.pello.android.androidsyncadapter.sqlprovider.Todo", bundle);
+        Log.d("PELLODEBUG","Sync now was pressed");
     }
 }
