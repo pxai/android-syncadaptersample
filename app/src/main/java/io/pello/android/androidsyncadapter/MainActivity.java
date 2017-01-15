@@ -1,10 +1,13 @@
 package io.pello.android.androidsyncadapter;
 
 import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.LoaderManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.SyncRequest;
 import android.database.Cursor;
@@ -54,7 +57,8 @@ public class MainActivity extends AppCompatActivity  implements
         getLoaderManager().initLoader(0, null, this);
 
         // Sync Adapter
-        account = new Account(DummyAuthenticator.ACCOUNT_NAME, DummyAuthenticator.ACCOUNT_TYPE);
+       // account = new Account(DummyAuthenticator.ACCOUNT_NAME, DummyAuthenticator.ACCOUNT_TYPE);
+        account = CreateSyncAccount(this);
         String authority = "io.pello.android.androidsyncadapter.sqlprovider.Todo";
 
         // Simple option, will ahndle everything smartly
@@ -68,6 +72,33 @@ public class MainActivity extends AppCompatActivity  implements
         //contentResolver.addPeriodicSync(account, authority, bundle, 5);
     }
 
+    public static Account CreateSyncAccount(Context context) {
+        // Create the account type and default account
+        Account newAccount = new Account(
+                DummyAuthenticator.ACCOUNT_NAME, DummyAuthenticator.ACCOUNT_TYPE);
+        // Get an instance of the Android account manager
+        AccountManager accountManager =
+                (AccountManager) context.getSystemService(
+                        ACCOUNT_SERVICE);
+        /*
+         * Add the account and account type, no password or user data
+         * If successful, return the Account object, otherwise report an error.
+         */
+        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+            /*
+             * If you don't set android:syncable="true" in
+             * in your <provider> element in the manifest,
+             * then call context.setIsSyncable(account, AUTHORITY, 1)
+             * here.
+             */
+        } else {
+            /*
+             * The account exists or some other error occurred. Log this, report it,
+             * or handle it internally.
+             */
+        }
+        return newAccount;
+    }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // This is called when a new Loader needs to be created.  This
@@ -137,7 +168,9 @@ public class MainActivity extends AppCompatActivity  implements
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true); // Performing a sync no matter if it's off
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true); // Performing a sync no matter if it's off
-        ContentResolver.requestSync(account, "io.pello.android.androidsyncadapter.sqlprovider.Todo", bundle);
+        // Simple option, will ahndle everything smartly
+        contentResolver = getContentResolver();
+        contentResolver.requestSync(account, "io.pello.android.androidsyncadapter.sqlprovider.Todo", bundle);
         Log.d("PELLODEBUG","Sync now was pressed");
     }
 }

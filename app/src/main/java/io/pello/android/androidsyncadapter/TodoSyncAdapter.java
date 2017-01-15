@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
@@ -20,13 +21,26 @@ import java.util.List;
 
 public class TodoSyncAdapter  extends AbstractThreadedSyncAdapter {
     private final AccountManager mAccountManager;
-
+    private ContentResolver contentResolver;
 
     public TodoSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         mAccountManager = AccountManager.get(context);
+        contentResolver = context.getContentResolver();
     }
 
+    public TodoSyncAdapter(
+            Context context,
+            boolean autoInitialize,
+            boolean allowParallelSyncs) {
+        super(context, autoInitialize, allowParallelSyncs);
+        /*
+         * If your app uses a content resolver, get an instance of it
+         * from the incoming Context
+         */
+        mAccountManager = AccountManager.get(context);
+        contentResolver = context.getContentResolver();
+    }
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
