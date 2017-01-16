@@ -7,12 +7,9 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This is the actual Sync Adapter
@@ -48,29 +45,19 @@ public class TodoSyncAdapter  extends AbstractThreadedSyncAdapter {
         try {
             // Get the auth token for the current account
 
+            //  String authToken = mAccountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
 
-          //  String authToken = mAccountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
-          //  ParseComServerAccessor parseComService = new ParseComServerAccessor();
+            // Get ToDo from the remote server
 
-            // Get shows from the remote server
-            //List remoteTvShows = parseComService.getShows(authToken);
+            // Get ToDo list from the local storage
 
-            // Get shows from the local storage
-            ArrayList localTvShows = new ArrayList();
-          /*  Cursor curTvShows = provider.query(TvShowsContract.CONTENT_URI, null, null, null, null);
-            if (curTvShows != null) {
-                while (curTvShows.moveToNext()) {
-                    localTvShows.add(TvShow.fromCursor(curTvShows));
-                }
-                curTvShows.close();
-            }*/
-            // TODO See what Local shows are missing on Remote
+            // TODO See what Local ToDo tasks are missing on Remote
 
-            // TODO See what Remote shows are missing on Local
+            // TODO See what Remote ToDo tasks are missing on Local
 
-            // TODO Updating remote tv shows
+            // TODO Updating remote ToDo tasks
 
-            // TODO Updating local tv shows
+            // TODO Updating local ToDo tasks
 
         } catch (Exception e) {
             e.printStackTrace();
