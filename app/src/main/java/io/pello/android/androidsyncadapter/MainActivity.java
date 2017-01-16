@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity  implements
         Bundle bundle = new Bundle();
         contentResolver.requestSync(account, authority, bundle);
 
-
         // With intervals
         //long interval = 24*60*60; // 12 hours
         //contentResolver.addPeriodicSync(account, authority, bundle, 5);

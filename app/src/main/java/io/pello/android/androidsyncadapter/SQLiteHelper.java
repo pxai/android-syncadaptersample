@@ -19,9 +19,7 @@ import android.util.Log;
 class SQLiteHelper extends SQLiteOpenHelper {
 
     public static final String NOMBRE_BD = "tasklist.db";
-
     public static final int VERSION_BD = 1;
-
     public static final String SQLCREAR = "create table tasks "+
             " (_id integer primary key autoincrement, " +
             " task text not null);" +
