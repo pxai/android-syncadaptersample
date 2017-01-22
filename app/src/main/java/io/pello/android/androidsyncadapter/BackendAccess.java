@@ -12,7 +12,7 @@ import org.json.JSONObject;
  */
 public class BackendAccess {
     private WebRequest webRequest;
-    private static final String GET_LAST_URL = "http://localhost/2dam-project-multisite/web/app_dev.php/admin/api/task/";
+    private static final String GET_LAST_URL = "http://bizgen.co/web/admin/api/task/";
     private static final String CREATE_URL = "";
 
     public BackendAccess () {
@@ -26,7 +26,7 @@ public class BackendAccess {
      */
     public List<Task> getLast (int idBackend) {
         List<Task> tasks = new ArrayList<Task>();
-        DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
         if (webRequest.get(GET_LAST_URL+idBackend)) {
             System.out.println("OK Total: " + webRequest.getResponseString());

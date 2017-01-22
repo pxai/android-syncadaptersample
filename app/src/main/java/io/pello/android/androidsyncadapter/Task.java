@@ -65,4 +65,16 @@ public class Task {
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", backendId=" + backendId +
+                ", task='" + task + '\'' +
+                ", isRead=" + isRead +
+                ", userId=" + userId +
+                ", lastUpdate=" + lastUpdate +
+                '}';
+    }
 }

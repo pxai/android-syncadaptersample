@@ -10,6 +10,8 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.util.List;
+
 
 /**
  * This is the actual Sync Adapter
@@ -19,9 +21,11 @@ import android.util.Log;
 public class TodoSyncAdapter  extends AbstractThreadedSyncAdapter {
     private final AccountManager mAccountManager;
     private ContentResolver contentResolver;
+    private BackendAccess backendAccess;
 
     public TodoSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
+        backendAccess = new BackendAccess();
         mAccountManager = AccountManager.get(context);
         contentResolver = context.getContentResolver();
     }
@@ -48,7 +52,8 @@ public class TodoSyncAdapter  extends AbstractThreadedSyncAdapter {
             //  String authToken = mAccountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
 
             // Get ToDo from the remote server
-
+            List<Task> tasks =  backendAccess.getLast(0);
+            Log.d("PELLODEBUG", tasks.toString());
             // Get ToDo list from the local storage
 
             // TODO See what Local ToDo tasks are missing on Remote
