@@ -105,7 +105,7 @@ public class DbAdapter {
      * @return Cursor Devuelve un cursor con los registros obtenidos.
      */
     public Cursor obtenerTareas() {
-        return db.query("tasks", new String[] {"_id","task"}, null, null, null, null, null);
+        return db.query("tasks", new String[] {"_id","task","id_backend","is_read"}, null, null, null, null, null);
     }
 
     /**
@@ -117,7 +117,7 @@ public class DbAdapter {
      * @throws SQLException
      */
     public Cursor obtenerTarea (long idRegistro) throws SQLException {
-        Cursor registro = db.query(true, "tasks",new String[] { "_id","task"},
+        Cursor registro = db.query(true, "tasks",new String[] { "_id","task","id_backend","is_read"},
                 "_id =" + idRegistro, null, null, null, null, null);
 
         // Si lo ha encontrado, apunta al inicio del cursor.
@@ -143,7 +143,7 @@ public class DbAdapter {
         registro.put("task", task);
 
         // Inserta el registro y devuelve el resultado.
-        return db.update("to", registro,
+        return db.update("tasks", registro,
                 "_id=" + idRegistro, null);
     }
 

@@ -22,7 +22,9 @@ class SQLiteHelper extends SQLiteOpenHelper {
     public static final int VERSION_BD = 1;
     public static final String SQLCREAR = "create table tasks "+
             " (_id integer primary key autoincrement, " +
-            " task text not null);" +
+            " task text not null," +
+            " id_backend integer not null default 0," +
+            " is_read integer not null default 0);" +
             " insert into tasks (task) values('EAT');";
 
 
