@@ -57,6 +57,13 @@ public class DatabaseContentProvider extends ContentProvider {
 
         // This will match: content://io.pello.android.androidsyncadapter.sqlprovider.Todo/task/2
         uriMatcher.addURI("io.pello.android.androidsyncadapter.sqlprovider.Todo", "task/*/", 2);
+
+        // the last one from the backend
+        // This will match: content://io.pello.android.androidsyncadapter.sqlprovider.Todo/tasks/last/backend
+        uriMatcher.addURI("io.pello.android.androidsyncadapter.sqlprovider.Todo", "tasks/last/backend", 3);
+
+        // This will match: content://io.pello.android.androidsyncadapter.sqlprovider.Todo/tasks/last/local
+        uriMatcher.addURI("io.pello.android.androidsyncadapter.sqlprovider.Todo", "tasks/last/local", 4);
     }
 
 
@@ -78,7 +85,12 @@ public class DatabaseContentProvider extends ContentProvider {
                 return dbAdapter.obtenerTareas();
             case 2:
                 Log.d("PELLODEBUG","query to 2. " + uri.getLastPathSegment());
-                break;
+            case 3:
+                Log.d("PELLODEBUG","query to 3. " + uri.getLastPathSegment());
+                return dbAdapter.obtenerUltimaTareaBackend();
+            case 4:
+                Log.d("PELLODEBUG","query to 4. " + uri.getLastPathSegment());
+                return dbAdapter.obtenerUltimaTareaLocal();
             default:	break;
         }
 
@@ -106,8 +118,7 @@ public class DatabaseContentProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         Log.d("PELLODEBUG","CP> insert " + uri);
 
-        dbAdapter.insertarTarea(values.getAsString("task"));
-
+        dbAdapter.insertarTarea(values.getAsString("task"),values.getAsInteger("backend_id"));
         Uri resultUri = Uri.parse("content://io.pello.android.androidsyncadapter.sqlprovider.Todo/1");
         return resultUri;
 

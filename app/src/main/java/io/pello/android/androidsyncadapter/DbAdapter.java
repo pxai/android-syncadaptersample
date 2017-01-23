@@ -75,12 +75,13 @@ public class DbAdapter {
      * @param task
      * @return Devuelve el número de registro insertado 0 -1 en caso de error
      */
-    public long insertarTarea(String task) {
+    public long insertarTarea(String task, int backendId) {
         // Creamos un registro
         ContentValues registro = new ContentValues();
-
+        Log.d("PELLODEBUG","DbAdapter> Insert: " + task + " id: " + backendId);
         // Agrega los datos.
         registro.put("task", task);
+        registro.put("id_backend", backendId);
 
         // Inserta el registro y devuelve el resultado.
         return db.insert("tasks", null, registro);
@@ -127,6 +128,42 @@ public class DbAdapter {
         return registro;
     }
 
+    /**
+     * obtenerUltimaTareaBackend
+     * Obtiene el último registro descargado del servidor
+     *
+     * @return último id recibido del servidor
+     * @throws SQLException
+     */
+    public Cursor obtenerUltimaTareaLocal() throws SQLException {
+        int result = 0;
+        Cursor registro = db.query(true, "tasks",new String[] { "_id","task","id_backend","is_read"},
+                null, null, null, null, "_id ASC","1");
+        // Si lo ha encontrado, apunta al inicio del cursor.
+        if (registro != null) {
+            registro.moveToFirst();
+        }
+        return registro;
+    }
+
+    /**
+     * obtenerUltimaTareaBackend
+     * Obtiene el último registro descargado del servidor
+     *
+     * @return último id recibido del servidor
+     * @throws SQLException
+     */
+    public Cursor obtenerUltimaTareaBackend () throws SQLException {
+        int result = 0;
+        Cursor registro = db.query(true, "tasks",new String[] { "_id","task","id_backend","is_read"},
+                null, null, null, null, "id_backend DESC"," 1");
+        // Si lo ha encontrado, apunta al inicio del cursor.
+        if (registro != null) {
+            System.out.println("Register exists!");
+            registro.moveToFirst();
+        }
+        return registro;
+    }
     /**
      * actualizarTarea
      * Hace un UPDATE de los valores del registro cuyo id es idRegistro.
