@@ -12,6 +12,7 @@ import android.content.Loader;
 import android.content.SyncRequest;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity  implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity  implements
 
     private Account account;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +47,7 @@ public class MainActivity extends AppCompatActivity  implements
 
         listView = (ListView) findViewById(R.id.listView);
         editTextNew = (EditText) findViewById(R.id.editTextNew);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
 
         // Create an empty adapter we will use to display the loaded data.
         mAdapter = new SimpleCursorAdapter(this,
@@ -69,6 +74,18 @@ public class MainActivity extends AppCompatActivity  implements
         // With intervals
         //long interval = 24*60*60; // 12 hours
         //contentResolver.addPeriodicSync(account, authority, bundle, 5);
+
+        // Listener for the swipe down gesture
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        Log.i("PELLODEBUG", "Update data");
+                        Toast.makeText(MainActivity.this,"Refreshing...",Toast.LENGTH_LONG).show();
+                        MainActivity.this.syncNow(null);
+                    }
+                }
+        );
     }
 
     public static Account CreateSyncAccount(Context context) {
@@ -151,6 +168,7 @@ public class MainActivity extends AppCompatActivity  implements
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("task",editTextNew.getText().toString());
+        contentValues.put("backend_id",0);
 
         // We finally make the request to the content provider
         Uri resultUri = getContentResolver().insert(
@@ -171,5 +189,9 @@ public class MainActivity extends AppCompatActivity  implements
         contentResolver = getContentResolver();
         contentResolver.requestSync(account, "io.pello.android.androidsyncadapter.sqlprovider.Todo", bundle);
         Log.d("PELLODEBUG","Sync now was pressed");
+
+        // Stop refresh effect
+        Toast.makeText(MainActivity.this,"Done!",Toast.LENGTH_SHORT).show();
+        swipeRefreshLayout.setRefreshing(false);
     }
 }
