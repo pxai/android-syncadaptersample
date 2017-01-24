@@ -52,22 +52,9 @@ public class TodoSyncAdapter  extends AbstractThreadedSyncAdapter {
         Log.d("PELLODEBUG", "SyncAdapter working for: " + account.name );
         int lastLocalId = 0;
         int lastBackendId = 0;
-        try {
-            // Get the auth token for the current account
+        Cursor cursor = null;
 
-            //  String authToken = mAccountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true);
-          //  Cursor cursor = provider.query("",null,null);
-           Cursor cursor = provider.query(
-                    Uri.parse(contentUri + "/tasks/last/local"),   // The content URI of the words table
-                    new String[]{"_id","task","id_backend","is_read"},
-                       "",                        // The columns to return for each row
-                    new String[]{""},                     // Selection criteria
-                    "");
-            if (cursor.getCount() > 0) {
-                lastLocalId = cursor.getInt(0);
-                Log.d("PELLODEBUG","Last local Id: " + cursor.getString(0));
-            }
-            Log.d("PELLODEBU'", "Last local Id: " + lastLocalId);
+        try {
 
             /////////////////// UPDATE FROM BACKEND /////////////////////
             // Get Last backend_id locally
@@ -81,7 +68,7 @@ public class TodoSyncAdapter  extends AbstractThreadedSyncAdapter {
                 lastBackendId = cursor.getInt(2);
                 Log.d("PELLODEBUG", "backend_id:" + cursor.getString(2));
             }
-            Log.d("PELLODEBU'", "Last backend Id: " + lastBackendId);
+            Log.d("PELLODEBUG'", "Last backend Id: " + lastBackendId);
 
             // Get ToDo from the remote server
             List<Task> tasks =  backendAccess.getLast(lastBackendId);
@@ -98,15 +85,44 @@ public class TodoSyncAdapter  extends AbstractThreadedSyncAdapter {
                 );
                 Log.d("PELLODEBUG","Inserted in local db: " + task.getTask());
             }
-            // Get ToDo list from the local storage
+            /////////////////// UPDATE FROM LOCAL TO BACKEND
+            // get all local record with id_backend = 0
+            // send them to backend
+            // update local id_backend with -1
+            cursor = provider.query(
+                    Uri.parse(contentUri + "/tasks/last/local"),   // The content URI of the words table
+                    new String[]{"_id","task","id_backend","is_read"},
+                    "",                        // The columns to return for each row
+                    new String[]{""},                     // Selection criteria
+                    "");
+            if (cursor.getCount() > 0) {
+                lastLocalId = cursor.getInt(0);
+                Log.d("PELLODEBUG","Last local Id: " + cursor.getString(0));
 
-            // TODO See what Local ToDo tasks are missing on Remote
+                // TODO: send array of Tasks
+                cursor.moveToFirst();
+                while (cursor.isAfterLast() == false) {
 
-            // TODO See what Remote ToDo tasks are missing on Local
+                    Task task = new Task();
+                    task.setId(cursor.getInt(0));
+                    task.setTask(cursor.getString(1));
 
-            // TODO Updating remote ToDo tasks
+                    backendAccess.insertTask(task);
+                    Log.d("PELLODEBUG","Sent data to backend: " + task);
 
-            // TODO Updating local ToDo tasks
+                    cursor.moveToNext();
+                }
+                // We finally make the request to the content provider
+                // To mark local records as sent.
+                // TODO, we should wait for the ACK from server
+                int total = provider.update(
+                        Uri.parse(contentUri),   // The content URI
+                        null, "", new String[]{""}
+                );
+                Log.d("PELLODEBUG","Locally mark as sent " + total);
+            }
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -64,6 +64,7 @@ public class DatabaseContentProvider extends ContentProvider {
 
         // This will match: content://io.pello.android.androidsyncadapter.sqlprovider.Todo/tasks/last/local
         uriMatcher.addURI("io.pello.android.androidsyncadapter.sqlprovider.Todo", "tasks/last/local", 4);
+
     }
 
 
@@ -91,6 +92,7 @@ public class DatabaseContentProvider extends ContentProvider {
             case 4:
                 Log.d("PELLODEBUG","query to 4. " + uri.getLastPathSegment());
                 return dbAdapter.obtenerUltimaTareaLocal();
+
             default:	break;
         }
 
@@ -130,8 +132,7 @@ public class DatabaseContentProvider extends ContentProvider {
                       String[] selectionArgs) {
         Log.d("PELLODEBUG","CP> " + uri);
 
-
-        return 0;
+        return dbAdapter.marcarComoEnviadasABackend();
 
     }
 }

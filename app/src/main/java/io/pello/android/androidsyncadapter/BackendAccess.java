@@ -13,7 +13,7 @@ import org.json.JSONObject;
 public class BackendAccess {
     private WebRequest webRequest;
     private static final String GET_LAST_URL = "http://bizgen.co/web/admin/api/task/";
-    private static final String CREATE_URL = "";
+    private static final String CREATE_URL = "http://bizgen.co/web/admin/api/task/create";
 
     public BackendAccess () {
         webRequest = new WebRequest();
@@ -59,7 +59,7 @@ public class BackendAccess {
      * @param task
      * @return
      */
-    public Integer insertTasks (Task task) {
+    public Integer insertTask (Task task) {
 
         String json = "{\"task\":{\"id\":1,\"task\":\""+task.getTask()+"\",\"id_frontend\":\""+task.getId()+"\",\"latitude\":6,\"longitude\":1,\"open\":1}}";
         try {

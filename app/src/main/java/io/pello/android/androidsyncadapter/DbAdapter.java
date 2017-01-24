@@ -138,7 +138,7 @@ public class DbAdapter {
     public Cursor obtenerUltimaTareaLocal() throws SQLException {
         int result = 0;
         Cursor registro = db.query(true, "tasks",new String[] { "_id","task","id_backend","is_read"},
-                null, null, null, null, "_id ASC","1");
+                "id_backend = 0"  , null, null, null, null, null);
         // Si lo ha encontrado, apunta al inicio del cursor.
         if (registro != null) {
             registro.moveToFirst();
@@ -146,6 +146,15 @@ public class DbAdapter {
         return registro;
     }
 
+    public int marcarComoEnviadasABackend () throws SQLException {
+        ContentValues registro = new ContentValues();
+
+        // Agrega los datos.
+        registro.put("id_backend", -1);
+
+        // Inserta el registro y devuelve el resultado.
+        return db.update("tasks", registro, "id_backend=0", null);
+    }
     /**
      * obtenerUltimaTareaBackend
      * Obtiene el último registro descargado del servidor
